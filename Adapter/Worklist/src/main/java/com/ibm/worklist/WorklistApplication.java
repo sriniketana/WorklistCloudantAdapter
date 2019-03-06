@@ -24,7 +24,6 @@ import org.lightcouch.CouchDbException;
 
 import javax.ws.rs.core.Context;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WorklistApplication extends MFPJAXRSApplication{
