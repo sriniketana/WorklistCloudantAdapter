@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.sample;
+package com.ibm.worklist;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ import com.cloudant.client.api.Database;
 
 @Path("/users")
 // @OAuthSecurity(enabled = false)
-public class CloudantJavaResource {
+public class WorklistResource {
 	/*
 	 * For more info on JAX-RS see https://jax-rs-spec.java.net/nonav/2.0-rev-a/apidocs/index.html
 	 */
@@ -48,8 +48,8 @@ public class CloudantJavaResource {
 	AdaptersAPI adaptersAPI;
 
 	private Database getDB() throws Exception {
-		System.out.println("in getDB(): "+ adaptersAPI.getJaxRsApplication(CloudantJavaApplication.class));
-		CloudantJavaApplication app = adaptersAPI.getJaxRsApplication(CloudantJavaApplication.class);
+		System.out.println("in getDB(): "+ adaptersAPI.getJaxRsApplication(WorklistApplication.class));
+		WorklistApplication app = adaptersAPI.getJaxRsApplication(WorklistApplication.class);
 		if (app.db == null) {
 			 app.initConnection();;
 		}
@@ -62,12 +62,12 @@ public class CloudantJavaResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addEntry(User user) throws Exception {
+	public Response addEntry(Workitem workitem) throws Exception {
 		System.out.println("in POST");
-		if(user!=null /*&& user.isValid()*/){
-			user.setId(null);
-			user.setRev(null);
-			com.cloudant.client.api.model.Response resp = getDB().save(user);
+		if(workitem!=null /*&& user.isValid()*/){
+			workitem.setId(null);
+			workitem.setRev(null);
+			com.cloudant.client.api.model.Response resp = getDB().save(workitem);
 			return Response.ok(resp.getId()).build();
 		}
 		else{
@@ -77,13 +77,13 @@ public class CloudantJavaResource {
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateEntry(@PathParam("id") String id, User newUser) throws Exception {
+	public Response updateEntry(@PathParam("id") String id, Workitem newWorkitem) throws Exception {
 		System.out.println("in PUT");
-		if(newUser!=null /*&& user.isValid()*/){
-			User oldUser = getEntryByID(id);
-			newUser.setId(oldUser.getId());
-			newUser.setRev(oldUser.getRev());
-			getDB().update(newUser);
+		if(newWorkitem!=null /*&& user.isValid()*/){
+			Workitem oldUser = getEntryByID(id);
+			newWorkitem.setId(oldUser.getId());
+			newWorkitem.setRev(oldUser.getRev());
+			getDB().update(newWorkitem);
 			return Response.ok().build();
 		}
 		else{
@@ -97,7 +97,7 @@ public class CloudantJavaResource {
 	@OAuthSecurity(scope = "Username_Password")
 	public Response deleteEntry(@PathParam("id") String id) throws Exception {
 		try{
-			User user = getDB().find(User.class, id);
+			Workitem user = getDB().find(Workitem.class, id);
 			getDB().remove(user);
 			return Response.ok().build();
 		}
@@ -109,18 +109,18 @@ public class CloudantJavaResource {
 
 	@GET
 	@Produces("application/json")
-	public List<User> getAllEntries() throws Exception {
+	public List<Workitem> getAllEntries() throws Exception {
 		System.out.println("in GET");
-		List<User> entries = getDB().view("_all_docs").includeDocs(true).query(User.class);
+		List<Workitem> entries = getDB().view("_all_docs").includeDocs(true).query(Workitem.class);
 		//return Response.ok(entries).build();
 		return entries;
 	}
 	@GET
 	@Path("/{id}")
 	@Produces("application/json")
-	public User getEntryByID(@PathParam("id") String id) throws Exception {
+	public Workitem getEntryByID(@PathParam("id") String id) throws Exception {
 		System.out.println("in GETbyID");
-		User user = getDB().find(User.class,id);
+		Workitem user = getDB().find(Workitem.class,id);
 		
 		return user;
 	}

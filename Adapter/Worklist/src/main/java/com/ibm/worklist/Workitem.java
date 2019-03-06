@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.sample;
+package com.ibm.worklist;
 
 import io.swagger.annotations.ApiModelProperty;
 
