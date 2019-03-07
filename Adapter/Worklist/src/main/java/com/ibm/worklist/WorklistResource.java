@@ -37,8 +37,8 @@ import com.cloudant.client.api.Database;
   
 
 
-@Path("/users")
-// @OAuthSecurity(enabled = false)
+@Path("/workitems")
+ @OAuthSecurity(enabled = false)
 public class WorklistResource {
 	/*
 	 * For more info on JAX-RS see https://jax-rs-spec.java.net/nonav/2.0-rev-a/apidocs/index.html
