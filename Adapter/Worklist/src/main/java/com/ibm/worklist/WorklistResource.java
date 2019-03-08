@@ -29,6 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.ibm.json.java.JSONObject;
 import com.ibm.mfp.adapter.api.AdaptersAPI;
 import com.ibm.mfp.adapter.api.OAuthSecurity;
 
@@ -77,6 +78,7 @@ public class WorklistResource {
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
+	
 	public Response updateEntry(@PathParam("id") String id, Workitem newWorkitem) throws Exception {
 		System.out.println("in PUT");
 		if(newWorkitem!=null /*&& user.isValid()*/){
@@ -84,7 +86,9 @@ public class WorklistResource {
 			newWorkitem.setId(oldUser.getId());
 			newWorkitem.setRev(oldUser.getRev());
 			getDB().update(newWorkitem);
-			return Response.ok().build();
+			JSONObject returnObj = new JSONObject();
+			returnObj.put("id", id); 
+			return Response.ok( returnObj.toString()).build();
 		}
 		else{
 			return Response.status(418).build();
@@ -99,7 +103,9 @@ public class WorklistResource {
 		try{
 			Workitem user = getDB().find(Workitem.class, id);
 			getDB().remove(user);
-			return Response.ok().build();
+			JSONObject returnObj = new JSONObject();
+			returnObj.put("id", id); 
+			return Response.ok(returnObj.toString()).build();
 		}
 		catch(NoDocumentException e){
 			return Response.status(404).build();
